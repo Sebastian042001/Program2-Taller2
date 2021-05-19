@@ -1,0 +1,181 @@
+//TALLER NUMERO 2
+
+#include<stdio.h>
+#include<math.h>
+#include<iomanip>
+#include<iostream>
+
+using namespace std;
+typedef float *tFloatPtr;
+typedef int *tIntPtr;
+
+
+void PedirDatos(tFloatPtr Capital_Prestamo,tFloatPtr Interes_Anual,tIntPtr Anos_Hipoteca,tFloatPtr Interes_Mensual);
+float Calculos(tFloatPtr Capital_Prestamo,tFloatPtr Interes_Anual,tIntPtr Anos_Hipoteca,tFloatPtr Interes_Mensual);
+void MostrarResultado(tFloatPtr Cuota_Pagar,tIntPtr Anos_Hipoteca,tFloatPtr Capital_Prestamo,tFloatPtr Interes_Anual);
+void PantallaPrincipal();
+void Encabezado();
+
+
+int main(){
+	
+	tFloatPtr Capital_Prestamo, Interes_Anual, Interes_Mensual, Cuota_Pagar;
+	tIntPtr Opciones,Opciones2, Opciones3, Anos_Hipoteca;
+	Opciones=new(int);
+	Opciones2=new(int);
+	Opciones3=new(int);
+	Capital_Prestamo=new (float);
+	Interes_Anual=new (float);
+	Anos_Hipoteca=new (int);
+	Interes_Mensual=new (float);
+	Cuota_Pagar=new(float);
+	*Opciones=-1;
+	*Opciones2=0;
+	*Opciones3=0;
+	
+	PantallaPrincipal();		//Mostramos la pantalla principal del programa
+	system("pause");
+	system("cls");
+	
+	while((*Opciones)<0 || (*Opciones)>4){
+		Encabezado();
+		printf("\n\n\n     Menu.");
+		printf("\n\n       0) Volver a la pantalla principal.");
+		printf("\n       1) Pedir datos.");
+		printf("\n       2) Realizar calculos.");
+		printf("\n       3) Mostrar Resultado.");
+		printf("\n       4) Salir.");
+		scanf("%i",Opciones);
+		system("cls");
+		
+		
+		switch(*Opciones){
+			case 0:{
+					PantallaPrincipal();
+					system("pause");
+					system("cls");	
+					*Opciones=-1;						
+				break;
+			}
+				
+			case 1:{
+					Encabezado();
+					PedirDatos(Capital_Prestamo,Interes_Anual,Anos_Hipoteca,Interes_Mensual);	
+					*Opciones=-1;
+					*Opciones2=1;
+					*Opciones3=0;
+				break;
+			}
+			case 2:{
+					if(*Opciones2!=0){
+						*Cuota_Pagar=Calculos(Capital_Prestamo,Interes_Anual,Anos_Hipoteca,Interes_Mensual);	
+						*Opciones3=1;	
+					}
+					else{
+						Encabezado();
+						printf("\n\n\n      Primero debe pedir los datos. \n       ");
+						system("pause");
+						system("cls");
+					}
+				*Opciones=-1;		
+				break;
+			}
+			case 3:{
+					if(*Opciones3!=0){
+						Encabezado();
+						MostrarResultado(Cuota_Pagar,Anos_Hipoteca,Capital_Prestamo,Interes_Anual);	
+					}
+					else{
+						Encabezado();
+						printf("\n\n\n       Primero de los valores y realice los calculos. \n       ");
+						system("pause");
+						system("cls");
+					}
+				*Opciones=-1;		
+				break;
+			}
+		}
+		
+		
+	}
+
+	
+	return 0;
+}
+//--------------Pedir datos------------
+void PedirDatos(tFloatPtr Capital_Prestamo,tFloatPtr Interes_Anual,tIntPtr Anos_Hipoteca,tFloatPtr Interes_Mensual){
+	
+	do{
+		printf("\n\n\n       Datos.");	
+		printf("\n\n       Capital del prestamo:");
+		scanf("%f",Capital_Prestamo);
+		printf("\n        Interes Anual:");
+		scanf("%f",Interes_Anual);
+		printf("\n        Anos de hipoteca:");
+		scanf("%i",Anos_Hipoteca);	
+	}while(*Capital_Prestamo<=0||*Interes_Anual<=0||*Anos_Hipoteca<=0);
+	
+	*Interes_Mensual=(*Interes_Anual)/1200;
+	system("cls");
+}
+//--------------Calculos---------------
+float Calculos(tFloatPtr Capital_Prestamo,tFloatPtr Interes_Anual,tIntPtr Anos_Hipoteca,tFloatPtr Interes_Mensual){
+	
+	tFloatPtr Elevar_Cantidad;
+	Elevar_Cantidad=new(float);
+	
+	*Elevar_Cantidad=((1)/ ((1)+(*Interes_Mensual)));
+	*Elevar_Cantidad=pow((*Elevar_Cantidad),((*Anos_Hipoteca)*12));
+	
+	return (((*Capital_Prestamo)*(*Interes_Mensual))/((1)-(*Elevar_Cantidad)));
+}
+//--------------Mostrar Resultados------
+void MostrarResultado(tFloatPtr Cuota_Pagar,tIntPtr Anos_Hipoteca,tFloatPtr Capital_Prestamo,tFloatPtr Interes_Anual){
+
+	tIntPtr control;
+	tFloatPtr Total;
+	control=new(int);
+	Total=new(float);
+	
+	*Total=*Cuota_Pagar;
+	
+	printf("\n\n       Datos Introducidos: ");
+	printf("\n       Capital del Prestamo: %f.", *Capital_Prestamo);
+	printf("\n       Interes Anual: %f.", *Interes_Anual);
+	printf("\n       Anos de Hipoteca: %i.", *Anos_Hipoteca);
+	
+	
+	cout<<"\n\n\n  Numero de cuota     Monto Mensual    Monto acumulado"<<endl;
+	for((*control)=1; (*control)<=(*Anos_Hipoteca)*12; (*control)++){
+		cout<< setw(10) <<(*control) << "          "<< setw(10) <<(*Cuota_Pagar)<< "          "<< setw(10) <<(*Total)<< endl;
+		*Total=(*Total)+(*Cuota_Pagar);
+	}
+	
+	system("pause");
+	system("cls");
+}
+//--------------------------------
+void Encabezado(){
+	printf("\n\n   ------------------------------------------------   ");
+	printf("\n   -------- Taller Numero dos de Program 2 --------");
+	printf("\n   ------------------------------------------------");
+}
+//-----------------------------------------------------------------
+void PantallaPrincipal(){
+	printf("\n\n   ------------------------------------------------   ");
+	printf("\n   -------- Taller Numero dos de Program 2 --------   ");
+	printf("\n   ------------------------------------------------   ");
+	printf("\n   ------------------------------------------------   ");
+	printf("\n   --------------- Calcular -----------------------   ");
+	printf("\n   ---------------------- Pagos -------------------   ");
+	printf("\n   ---------------- Mensuales ---------------------   ");
+	printf("\n   ------------------------------------------------   ");
+	printf("\n   ------------------------------------------------   ");
+	printf("\n   -------------------------- Realizado por:-------   ");
+	printf("\n   ---------------------------- Corzo Arausy ------   ");
+	printf("\n   ---------------------------- Borges Sebastian---   ");
+	printf("\n   ------------------------------------------------   ");
+	printf("\n   ");
+
+
+}	
