@@ -4,6 +4,8 @@
 #include<math.h>
 #include<iomanip>
 #include<iostream>
+#include"LibreriaTallerNumeroDosProgram.h"
+#include <locale.h>		//Esta libreria nos permite usar la funcion setlocale, funcion que nos permite usar la "ñ"
 
 using namespace std;
 typedef float *tFloatPtr;
@@ -11,16 +13,18 @@ typedef int *tIntPtr;
 
 
 void PedirDatos(tFloatPtr Capital_Prestamo,tFloatPtr Interes_Anual,tIntPtr Anos_Hipoteca,tFloatPtr Interes_Mensual);
-float Calculos(tFloatPtr Capital_Prestamo,tFloatPtr Interes_Anual,tIntPtr Anos_Hipoteca,tFloatPtr Interes_Mensual);
-void MostrarResultado(tFloatPtr Cuota_Pagar,tIntPtr Anos_Hipoteca,tFloatPtr Capital_Prestamo,tFloatPtr Interes_Anual);
 void PantallaPrincipal();
 void Encabezado();
 
 
 int main(){
 	
+	setlocale(LC_ALL, "spanish");
+	
+	//Declaramos las variables
 	tFloatPtr Capital_Prestamo, Interes_Anual, Interes_Mensual, Cuota_Pagar;
 	tIntPtr Opciones,Opciones2, Opciones3, Anos_Hipoteca;
+	//Al ser punteros se le asigna una direccion de memoria valida
 	Opciones=new(int);
 	Opciones2=new(int);
 	Opciones3=new(int);
@@ -29,6 +33,7 @@ int main(){
 	Anos_Hipoteca=new (int);
 	Interes_Mensual=new (float);
 	Cuota_Pagar=new(float);
+	//Las punteros de "Opciones" manejan las interacciones del menu
 	*Opciones=-1;
 	*Opciones2=0;
 	*Opciones3=0;
@@ -39,18 +44,18 @@ int main(){
 	
 	while((*Opciones)<0 || (*Opciones)>4){
 		Encabezado();
-		printf("\n\n\n     Menu.");
-		printf("\n\n       0) Volver a la pantalla principal.");
-		printf("\n       1) Pedir datos.");
-		printf("\n       2) Realizar calculos.");
-		printf("\n       3) Mostrar Resultado.");
-		printf("\n       4) Salir.");
-		scanf("%i",Opciones);
+		cout<<"\n\n\n     Menu.";
+		cout<<"\n\n       0) Volver a la pantalla principal.";
+		cout<<"\n       1) Pedir datos.";
+		cout<<"\n       2) Realizar calculos.";
+		cout<<"\n       3) Mostrar Resultado.";
+		cout<<"\n       4) Salir.";
+		cin>>*Opciones;
 		system("cls");
 		
 		
 		switch(*Opciones){
-			case 0:{
+			case 0:{						//Aqui exclusivamente volvemos a la pantalla principal
 					PantallaPrincipal();
 					system("pause");
 					system("cls");	
@@ -58,40 +63,53 @@ int main(){
 				break;
 			}
 				
-			case 1:{
-					Encabezado();
+			case 1:{						//Pedimos Los datos al usuario
 					PedirDatos(Capital_Prestamo,Interes_Anual,Anos_Hipoteca,Interes_Mensual);	
 					*Opciones=-1;
 					*Opciones2=1;
 					*Opciones3=0;
 				break;
 			}
-			case 2:{
+			case 2:{						//Se realizan los calculos que terminan siedno almacenados en "Cuota_Pagar"
 					if(*Opciones2!=0){
 						*Cuota_Pagar=Calculos(Capital_Prestamo,Interes_Anual,Anos_Hipoteca,Interes_Mensual);	
 						*Opciones3=1;	
 					}
 					else{
 						Encabezado();
-						printf("\n\n\n      Primero debe pedir los datos. \n       ");
+						cout<<"\n\n\n      Primero debe pedir los datos. \n       ";
 						system("pause");
 						system("cls");
 					}
 				*Opciones=-1;		
 				break;
 			}
-			case 3:{
-					if(*Opciones3!=0){
+			case 3:{						//Se le muestran los resultados al usuario
+					if(*Opciones3!=0){			//Siempre y cuando se hayan pedido los datos y realizado los calculos
 						Encabezado();
 						MostrarResultado(Cuota_Pagar,Anos_Hipoteca,Capital_Prestamo,Interes_Anual);	
 					}
-					else{
+					else{						//Cuando no se han dado los datos o no se han realizado los calculos
 						Encabezado();
-						printf("\n\n\n       Primero de los valores y realice los calculos. \n       ");
+						cout<<"\n\n\n       Primero de los valores y realice los calculos. \n       ";
 						system("pause");
 						system("cls");
 					}
 				*Opciones=-1;		
+				break;
+			}
+			case 4:{
+				Encabezado();
+				cout<<"\n\n\n       Fin del Programa.";
+				//Al finalizar el programa se libera toda la memoria utilizada en los punteros
+				delete Opciones;
+				delete Opciones2;
+				delete Opciones3;
+				delete Capital_Prestamo;
+				delete Interes_Anual;
+				delete Anos_Hipoteca;
+				delete Interes_Mensual;
+				delete Cuota_Pagar;
 				break;
 			}
 		}
@@ -106,76 +124,47 @@ int main(){
 void PedirDatos(tFloatPtr Capital_Prestamo,tFloatPtr Interes_Anual,tIntPtr Anos_Hipoteca,tFloatPtr Interes_Mensual){
 	
 	do{
-		printf("\n\n\n       Datos.");	
-		printf("\n\n       Capital del prestamo:");
-		scanf("%f",Capital_Prestamo);
-		printf("\n        Interes Anual:");
-		scanf("%f",Interes_Anual);
-		printf("\n        Anos de hipoteca:");
-		scanf("%i",Anos_Hipoteca);	
-	}while(*Capital_Prestamo<=0||*Interes_Anual<=0||*Anos_Hipoteca<=0);
+		Encabezado();
+		cout<<"\n\n\n       Datos.";	
+		cout<<"\n\n       Capital del prestamo:";
+		cin>>*Capital_Prestamo;
+		cout<<"\n        Interes Anual:";
+		cin>>*Interes_Anual;
+		cout<<"\n        Años de hipoteca:";
+		cin>>*Anos_Hipoteca;
+		system("cls");
+	}while(*Capital_Prestamo<=0||*Interes_Anual<0||*Anos_Hipoteca<=0);
+	//Las condiciones de salida son que (El capital de prestamo no sea negativo) , (los intereses no sean negativos (pero aceptando el valor 0)) y (que los años no sean negativos)
 	
 	*Interes_Mensual=(*Interes_Anual)/1200;
-	system("cls");
+	
 }
-//--------------Calculos---------------
-float Calculos(tFloatPtr Capital_Prestamo,tFloatPtr Interes_Anual,tIntPtr Anos_Hipoteca,tFloatPtr Interes_Mensual){
-	
-	tFloatPtr Elevar_Cantidad;
-	Elevar_Cantidad=new(float);
-	
-	*Elevar_Cantidad=((1)/ ((1)+(*Interes_Mensual)));
-	*Elevar_Cantidad=pow((*Elevar_Cantidad),((*Anos_Hipoteca)*12));
-	
-	return (((*Capital_Prestamo)*(*Interes_Mensual))/((1)-(*Elevar_Cantidad)));
-}
-//--------------Mostrar Resultados------
-void MostrarResultado(tFloatPtr Cuota_Pagar,tIntPtr Anos_Hipoteca,tFloatPtr Capital_Prestamo,tFloatPtr Interes_Anual){
 
-	tIntPtr control;
-	tFloatPtr Total;
-	control=new(int);
-	Total=new(float);
-	
-	*Total=*Cuota_Pagar;
-	
-	printf("\n\n       Datos Introducidos: ");
-	printf("\n       Capital del Prestamo: %f.", *Capital_Prestamo);
-	printf("\n       Interes Anual: %f.", *Interes_Anual);
-	printf("\n       Anos de Hipoteca: %i.", *Anos_Hipoteca);
-	
-	
-	cout<<"\n\n\n  Numero de cuota     Monto Mensual    Monto acumulado"<<endl;
-	for((*control)=1; (*control)<=(*Anos_Hipoteca)*12; (*control)++){
-		cout<< setw(10) <<(*control) << "          "<< setw(10) <<(*Cuota_Pagar)<< "          "<< setw(10) <<(*Total)<< endl;
-		*Total=(*Total)+(*Cuota_Pagar);
-	}
-	
-	system("pause");
-	system("cls");
-}
 //--------------------------------
 void Encabezado(){
-	printf("\n\n   ------------------------------------------------   ");
-	printf("\n   -------- Taller Numero dos de Program 2 --------");
-	printf("\n   ------------------------------------------------");
+	cout<<"\n\n   ------------------------------------------------   ";
+	cout<<"\n   -------- Taller Numero dos de Program 2 --------";
+	cout<<"\n   ------------------------------------------------";
 }
 //-----------------------------------------------------------------
 void PantallaPrincipal(){
-	printf("\n\n   ------------------------------------------------   ");
-	printf("\n   -------- Taller Numero dos de Program 2 --------   ");
-	printf("\n   ------------------------------------------------   ");
-	printf("\n   ------------------------------------------------   ");
-	printf("\n   --------------- Calcular -----------------------   ");
-	printf("\n   ---------------------- Pagos -------------------   ");
-	printf("\n   ---------------- Mensuales ---------------------   ");
-	printf("\n   ------------------------------------------------   ");
-	printf("\n   ------------------------------------------------   ");
-	printf("\n   -------------------------- Realizado por:-------   ");
-	printf("\n   ---------------------------- Corzo Arausy ------   ");
-	printf("\n   ---------------------------- Borges Sebastian---   ");
-	printf("\n   ------------------------------------------------   ");
-	printf("\n   ");
+	
+	cout<<"\n\n   ------------------------------------------------   ";
+	cout<<"\n   -------- Taller Numero dos de Program 2---------   ";
+	cout<<"\n   ------------------------------------------------   ";
+	cout<<"\n   ------------------------------------------------   ";
+	cout<<"\n   --------------- Calcular -----------------------   ";
+	cout<<"\n   --------------------- Pagos --------------------   ";
+	cout<<"\n   ----------------- Mensuales --------------------   ";
+	cout<<"\n   -------------------- de la ---------------------   ";
+	cout<<"\n   ----------------------- Hipoteca ---------------   ";
+	cout<<"\n   ------------------------------------------------   ";
+	cout<<"\n   ------------------------------------------------   ";
+	cout<<"\n   -------------------------- Realizado por:-------   ";
+	cout<<"\n   ---------------------------- Corzo Arausy ------   ";
+	cout<<"\n   ---------------------------- Borges Sebastian---   ";
+	cout<<"\n   ------------------------------------------------   ";
+	cout<<"\n   ";
 
 
 }	
