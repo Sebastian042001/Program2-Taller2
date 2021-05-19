@@ -1,0 +1,61 @@
+//Libreria del segundo taller (Program2)
+#include<stdio.h>
+#include<math.h>
+#include<iomanip>
+#include<iostream>
+#include <locale.h>		
+
+
+using namespace std;
+typedef float *tFloatPtr;
+typedef int *tIntPtr;
+
+float Calculos(tFloatPtr Capital_Prestamo,tFloatPtr Interes_Anual,tIntPtr Anos_Hipoteca,tFloatPtr Interes_Mensual);
+void MostrarResultado(tFloatPtr Cuota_Pagar,tIntPtr Anos_Hipoteca,tFloatPtr Capital_Prestamo,tFloatPtr Interes_Anual);
+
+//--------------Mostrar Resultados------
+void MostrarResultado(tFloatPtr Cuota_Pagar,tIntPtr Anos_Hipoteca,tFloatPtr Capital_Prestamo,tFloatPtr Interes_Anual){
+
+	tIntPtr control;
+	tFloatPtr Total;
+	control=new(int);
+	Total=new(float);
+	
+	*Total=*Cuota_Pagar;
+	
+	cout<<"\n\n       Datos Introducidos: ";							//Se muestran los datos introducidos por el usuario
+	cout<<"\n       Capital del Prestamo: %f.", *Capital_Prestamo;
+	cout<<"\n       Interes Anual: %f.", *Interes_Anual;
+	cout<<"\n       Años de Hipoteca: %i.", *Anos_Hipoteca;
+	
+	
+	cout<<"\n\n\n  Numero de cuota     Monto Mensual    Monto acumulado"<<endl;		//Se muestra una barra donde especifica que significan los valores
+	
+	for((*control)=1; (*control)<=(*Anos_Hipoteca)*12; (*control)++){						//Se recorren el numero de cuotas (que va desde la primera (1) hasta la ultima que es el total de los menes de la hipoteca)
+		cout<< setw(10) <<(*control) << "          "<< setw(10) <<(*Cuota_Pagar)<< "          "<< setw(10) <<(*Total)<< endl;
+		*Total=(*Total)+(*Cuota_Pagar);												//En (total) se va almacenando todo el dinero que se habra pagado al final de todos los meses de hipoteca
+	}
+	
+	system("pause");
+	system("cls");
+}
+//--------------Calculos---------------
+float Calculos(tFloatPtr Capital_Prestamo,tFloatPtr Interes_Anual,tIntPtr Anos_Hipoteca,tFloatPtr Interes_Mensual){
+	
+	tFloatPtr Elevar_Cantidad;
+	Elevar_Cantidad=new(float);
+	
+	if((*Interes_Anual)==0){				//Cuando el interes anual es de 0
+		return ((*Capital_Prestamo)/((*Anos_Hipoteca)*12));
+	}
+	else{									//Cuando el interes anual es distinto a 0
+		*Elevar_Cantidad=((1)/ ((1)+(*Interes_Mensual)));
+		*Elevar_Cantidad=pow((*Elevar_Cantidad),((*Anos_Hipoteca)*12));
+	
+		return (((*Capital_Prestamo)*(*Interes_Mensual))/((1)-(*Elevar_Cantidad)));		
+	}
+	
+
+}
+
+
